@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGA SIZE 系列 - PLASTIC_JUNKIE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">PLASTIC_JUNKIE</a>
+            <span class="subtitle">塑膠模型資料庫</span>
+        </div>
+    </header>
+
+    <nav class="series-nav">
+        <ul>
+            <li><a href="series-pg.html">PG</a></li>
+            <li><a href="series-mg.html">MG</a></li>
+            <li><a href="series-rg.html">RG</a></li>
+            <li><a href="series-hg.html">HG</a></li>
+            <li><a href="series-sd.html">SD</a></li>
+            <li><a href="series-re100.html">RE/100</a></li>
+            <li><a href="series-fm.html">FM</a></li>
+            <li><a href="series-megasize.html" class="active">MEGA SIZE</a></li>
+            <li><a href="series-lego.html">LEGO</a></li>
+            <li><a href="series-china.html" class="nav-warning">中國產</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="series-header">
+            <h1>MEGA SIZE</h1>
+            <span class="series-scale">1/48</span>
+            <span class="series-count" id="product-count"></span>
+        </div>
+
+        <div class="product-grid" id="product-grid">
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 PLASTIC_JUNKIE Gundam Database.</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="series.js"></script>
+    <script>
+        loadSeries('MEGASIZE');
+    </script>
+</body>
+</html>
