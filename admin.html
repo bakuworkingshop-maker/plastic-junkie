@@ -78,7 +78,18 @@
             </div>
             <div class="form-row">
                 <div><label>背面圖 URL</label><input type="text" id="f-back" placeholder="images/mg001-back.jpg"></div>
+                <div><label>左側圖 URL</label><input type="text" id="f-left" placeholder="images/mg001-left.jpg"></div>
+            </div>
+            <div class="form-row">
+                <div><label>右側圖 URL</label><input type="text" id="f-right" placeholder="images/mg001-right.jpg"></div>
                 <div><label>細節圖 URL（逗號分隔）</label><input type="text" id="f-detail" placeholder="images/mg001-d1.jpg, images/mg001-d2.jpg"></div>
+            </div>
+            <div class="form-row">
+                <div><label>說明書 URL（逗號分隔）</label><input type="text" id="f-manual" placeholder="images/mg001-m1.jpg, images/mg001-m2.jpg"></div>
+                <div><label>零件圖 URL（逗號分隔）</label><input type="text" id="f-runners" placeholder="images/mg001-r1.jpg, images/mg001-r2.jpg"></div>
+            </div>
+            <div class="form-row">
+                <div><label>動作圖 URL（逗號分隔）</label><input type="text" id="f-action" placeholder="images/mg001-a1.jpg, images/mg001-a2.jpg"></div>
             </div>
             <input type="hidden" id="f-orig-no">
             <input type="hidden" id="f-orig-series">
@@ -196,7 +207,12 @@
             document.getElementById('f-box').value = imgs.box || '';
             document.getElementById('f-front').value = imgs.front || '';
             document.getElementById('f-back').value = imgs.back || '';
+            document.getElementById('f-left').value = imgs.left || '';
+            document.getElementById('f-right').value = imgs.right || '';
             document.getElementById('f-detail').value = (imgs.detail||[]).join(', ');
+            document.getElementById('f-manual').value = (imgs.manual||[]).join(', ');
+            document.getElementById('f-runners').value = (imgs.runners||[]).join(', ');
+            document.getElementById('f-action').value = (imgs.action||[]).join(', ');
             document.getElementById('f-orig-no').value = no;
             document.getElementById('f-orig-series').value = currentSeries;
             document.getElementById('form-title').textContent = `編輯產品: ${p.no}`;
@@ -213,7 +229,12 @@
             document.getElementById('f-box').value = '';
             document.getElementById('f-front').value = '';
             document.getElementById('f-back').value = '';
+            document.getElementById('f-left').value = '';
+            document.getElementById('f-right').value = '';
             document.getElementById('f-detail').value = '';
+            document.getElementById('f-manual').value = '';
+            document.getElementById('f-runners').value = '';
+            document.getElementById('f-action').value = '';
             document.getElementById('f-orig-no').value = '';
             document.getElementById('f-orig-series').value = '';
             document.getElementById('form-title').textContent = '新增產品';
@@ -230,6 +251,9 @@
             const data = getData();
             if (!data[series]) data[series] = [];
             const detailRaw = document.getElementById('f-detail').value.trim();
+            const manualRaw = document.getElementById('f-manual').value.trim();
+            const runnersRaw = document.getElementById('f-runners').value.trim();
+            const actionRaw = document.getElementById('f-action').value.trim();
             const newProd = {
                 no, name,
                 name_jp: document.getElementById('f-name_jp').value.trim(),
@@ -239,7 +263,12 @@
                     box: document.getElementById('f-box').value.trim(),
                     front: document.getElementById('f-front').value.trim(),
                     back: document.getElementById('f-back').value.trim(),
-                    detail: detailRaw ? detailRaw.split(',').map(s => s.trim()).filter(Boolean) : []
+                    left: document.getElementById('f-left').value.trim(),
+                    right: document.getElementById('f-right').value.trim(),
+                    detail: detailRaw ? detailRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
+                    manual: manualRaw ? manualRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
+                    runners: runnersRaw ? runnersRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
+                    action: actionRaw ? actionRaw.split(',').map(s => s.trim()).filter(Boolean) : []
                 }
             };
 
