@@ -6,7 +6,7 @@
     <title>管理後台 - PLASTIC_JUNKIE</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .admin-container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+        .admin-container { max-width: 1100px; margin: 0 auto; padding: 24px; }
         .login-box { max-width: 400px; margin: 100px auto; background: var(--bg-secondary); padding: 40px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
         .login-box input { width: 100%; padding: 12px; margin: 12px 0; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-size: 16px; }
         .login-box .btn { width: 100%; padding: 12px; font-size: 16px; cursor: pointer; border: none; }
@@ -17,9 +17,15 @@
         .form-section { background: var(--bg-secondary); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
         .form-section h3 { margin-bottom: 16px; color: var(--accent); }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .form-row.full { grid-template-columns: 1fr; }
         .form-row label { font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 4px; }
-        .form-row input, .form-row select { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-size: 14px; }
+        .form-row input, .form-row select { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .img-gallery { margin-top: 8px; }
+        .img-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; background: var(--bg); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border); }
+        .img-row .img-no { color: var(--text-muted); font-size: 13px; min-width: 28px; text-align: center; }
+        .img-row input[type="text"] { flex: 1; padding: 8px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text); border-radius: 3px; font-size: 13px; }
+        .img-row select { padding: 8px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text); border-radius: 3px; font-size: 13px; min-width: 120px; }
+        .img-row .btn-del-img { background: #c0392b; color: #fff; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .btn-add-img { background: #2e86c1; color: #fff; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 13px; margin-top: 8px; }
         .product-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .product-table th { background: var(--card-bg); padding: 10px; text-align: left; border-bottom: 2px solid var(--accent); position: sticky; top: 0; }
         .product-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
@@ -30,6 +36,7 @@
         .btn-del { background: #c0392b; color: #fff; }
         .btn-export { background: #27ae60; color: #fff; }
         .btn-logout { background: #7f8c8d; color: #fff; }
+        .btn-save { background: #e94560; color: #fff; padding: 10px 28px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer; }
         .table-wrap { max-height: 500px; overflow-y: auto; border-radius: 4px; }
         .msg { padding: 10px 16px; border-radius: 4px; margin-bottom: 12px; font-size: 14px; }
         .msg-ok { background: #1e3a1e; color: #27ae60; border: 1px solid #27ae60; }
@@ -72,29 +79,17 @@
                 <div><label>發售日期</label><input type="text" id="f-release" placeholder="2013-08"></div>
                 <div><label>價格 (¥)</label><input type="number" id="f-price" placeholder="4500"></div>
             </div>
-            <div class="form-row">
-                <div><label>盒面圖 URL</label><input type="text" id="f-box" placeholder="images/mg001-box.jpg"></div>
-                <div><label>正面圖 URL</label><input type="text" id="f-front" placeholder="images/mg001-front.jpg"></div>
+
+            <div style="margin-top:16px">
+                <label style="font-size:14px;color:var(--accent);margin-bottom:8px;display:block">圖片列表（無限添加）</label>
+                <div class="img-gallery" id="img-gallery"></div>
+                <button class="btn-add-img" onclick="addImageRow()">+ 添加圖片</button>
             </div>
-            <div class="form-row">
-                <div><label>背面圖 URL</label><input type="text" id="f-back" placeholder="images/mg001-back.jpg"></div>
-                <div><label>左側圖 URL</label><input type="text" id="f-left" placeholder="images/mg001-left.jpg"></div>
-            </div>
-            <div class="form-row">
-                <div><label>右側圖 URL</label><input type="text" id="f-right" placeholder="images/mg001-right.jpg"></div>
-                <div><label>細節圖 URL（逗號分隔）</label><input type="text" id="f-detail" placeholder="images/mg001-d1.jpg, images/mg001-d2.jpg"></div>
-            </div>
-            <div class="form-row">
-                <div><label>說明書 URL（逗號分隔）</label><input type="text" id="f-manual" placeholder="images/mg001-m1.jpg, images/mg001-m2.jpg"></div>
-                <div><label>零件圖 URL（逗號分隔）</label><input type="text" id="f-runners" placeholder="images/mg001-r1.jpg, images/mg001-r2.jpg"></div>
-            </div>
-            <div class="form-row">
-                <div><label>動作圖 URL（逗號分隔）</label><input type="text" id="f-action" placeholder="images/mg001-a1.jpg, images/mg001-a2.jpg"></div>
-            </div>
+
             <input type="hidden" id="f-orig-no">
             <input type="hidden" id="f-orig-series">
-            <div style="margin-top:12px;display:flex;gap:8px">
-                <button class="btn" onclick="saveProduct()">儲存</button>
+            <div style="margin-top:16px;display:flex;gap:8px">
+                <button class="btn-save" onclick="saveProduct()">儲存</button>
                 <button class="btn btn-logout btn-sm" onclick="cancelEdit()" id="btn-cancel" style="display:none">取消編輯</button>
             </div>
         </div>
@@ -103,7 +98,7 @@
             <h3 id="table-title">產品列表</h3>
             <div class="table-wrap">
                 <table class="product-table">
-                    <thead><tr><th>編號</th><th>名稱</th><th>發售</th><th>價格</th><th>操作</th></tr></thead>
+                    <thead><tr><th>編號</th><th>名稱</th><th>發售</th><th>價格</th><th>圖片數</th><th>操作</th></tr></thead>
                     <tbody id="product-tbody"></tbody>
                 </table>
             </div>
@@ -114,32 +109,27 @@
     <script>
         const ADMIN_PASSWORD = 'plasticjunkie2024';
         const ALL_SERIES = ['PG','MG','RG','HG','SD','RE100','FM','MEGASIZE','LEGO','CHINA'];
+        const IMG_LABELS = ['盒面圖','正面圖','背面圖','左側圖','右側圖','細節圖','說明書','零件圖','板件圖','貼紙圖','動作圖','包裝圖','比較圖','其他'];
         let currentSeries = 'MG';
         let editMode = false;
 
         function login() {
-            const pwd = document.getElementById('password').value;
-            if (pwd === ADMIN_PASSWORD) {
+            if (document.getElementById('password').value === ADMIN_PASSWORD) {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-screen').classList.remove('hidden');
                 initAdmin();
-            } else {
-                document.getElementById('login-msg').textContent = '密碼錯誤';
-            }
+            } else document.getElementById('login-msg').textContent = '密碼錯誤';
         }
-
         function logout() {
             document.getElementById('login-screen').classList.remove('hidden');
             document.getElementById('admin-screen').classList.add('hidden');
             document.getElementById('password').value = '';
         }
-
         function msg(text, type) {
             const area = document.getElementById('msg-area');
             area.innerHTML = `<div class="msg msg-${type}">${text}</div>`;
             setTimeout(() => area.innerHTML = '', 3000);
         }
-
         function initAdmin() {
             const picker = document.getElementById('series-picker');
             picker.innerHTML = ALL_SERIES.map(s =>
@@ -149,7 +139,6 @@
             sel.innerHTML = ALL_SERIES.map(s => `<option value="${s}" ${s===currentSeries?'selected':''}>${s}</option>`).join('');
             loadProducts();
         }
-
         function switchSeries(s) {
             currentSeries = s;
             document.querySelectorAll('#series-picker button').forEach(b => b.classList.remove('active'));
@@ -158,24 +147,56 @@
             cancelEdit();
             loadProducts();
         }
+        function getData() { return window.GUNDAM_DATA || {}; }
+        function saveData(data) { window.GUNDAM_DATA = data; }
 
-        function getData() {
-            return window.GUNDAM_DATA || {};
+        // ---- 動態圖片列表 ----
+        function addImageRow(url, label) {
+            const gallery = document.getElementById('img-gallery');
+            const idx = gallery.children.length + 1;
+            const row = document.createElement('div');
+            row.className = 'img-row';
+            const labelOpts = IMG_LABELS.map(l => `<option value="${l}" ${l===label?'selected':''}>${l}</option>`).join('');
+            row.innerHTML = `
+                <span class="img-no">#${idx}</span>
+                <input type="text" placeholder="圖片 URL，例如 images/mg001-box.jpg" value="${url||''}">
+                <select>${labelOpts}</select>
+                <button class="btn-del-img" onclick="this.parentElement.remove(); renumberImages()">✕</button>
+            `;
+            gallery.appendChild(row);
+        }
+        function renumberImages() {
+            const rows = document.querySelectorAll('#img-gallery .img-row');
+            rows.forEach((r, i) => { r.querySelector('.img-no').textContent = '#' + (i+1); });
+        }
+        function clearImages() {
+            document.getElementById('img-gallery').innerHTML = '';
+        }
+        function getImagesFromForm() {
+            const rows = document.querySelectorAll('#img-gallery .img-row');
+            const imgs = [];
+            rows.forEach(r => {
+                const url = r.querySelector('input').value.trim();
+                const label = r.querySelector('select').value;
+                if (url) imgs.push({ url, label });
+            });
+            return imgs;
+        }
+        function populateImages(imgs) {
+            clearImages();
+            if (!imgs || imgs.length === 0) return;
+            imgs.forEach(img => addImageRow(img.url, img.label));
         }
 
-        function saveData(data) {
-            window.GUNDAM_DATA = data;
-        }
-
+        // ---- 產品列表 ----
         function loadProducts() {
             const data = getData();
             const products = data[currentSeries] || [];
             const tbody = document.getElementById('product-tbody');
             document.getElementById('product-count').textContent = `共 ${products.length} 件`;
             document.getElementById('table-title').textContent = `${currentSeries} 系列 - 產品列表`;
-
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px">暫無產品</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px">暫無產品</td></tr>';
                 return;
             }
             tbody.innerHTML = products.map((p, i) => `
@@ -184,6 +205,7 @@
                     <td>${p.name}</td>
                     <td>${p.release||'-'}</td>
                     <td>¥${(p.price||0).toLocaleString()}</td>
+                    <td>${(p.images||[]).length}</td>
                     <td class="actions">
                         <button class="btn-sm btn-edit" onclick="editProduct('${p.no}')">編輯</button>
                         <button class="btn-sm btn-del" onclick="deleteProduct('${p.no}')">刪除</button>
@@ -203,16 +225,7 @@
             document.getElementById('f-name_jp').value = p.name_jp || '';
             document.getElementById('f-release').value = p.release || '';
             document.getElementById('f-price').value = p.price || '';
-            const imgs = p.images || {};
-            document.getElementById('f-box').value = imgs.box || '';
-            document.getElementById('f-front').value = imgs.front || '';
-            document.getElementById('f-back').value = imgs.back || '';
-            document.getElementById('f-left').value = imgs.left || '';
-            document.getElementById('f-right').value = imgs.right || '';
-            document.getElementById('f-detail').value = (imgs.detail||[]).join(', ');
-            document.getElementById('f-manual').value = (imgs.manual||[]).join(', ');
-            document.getElementById('f-runners').value = (imgs.runners||[]).join(', ');
-            document.getElementById('f-action').value = (imgs.action||[]).join(', ');
+            populateImages(p.images || []);
             document.getElementById('f-orig-no').value = no;
             document.getElementById('f-orig-series').value = currentSeries;
             document.getElementById('form-title').textContent = `編輯產品: ${p.no}`;
@@ -226,15 +239,7 @@
             document.getElementById('f-name_jp').value = '';
             document.getElementById('f-release').value = '';
             document.getElementById('f-price').value = '';
-            document.getElementById('f-box').value = '';
-            document.getElementById('f-front').value = '';
-            document.getElementById('f-back').value = '';
-            document.getElementById('f-left').value = '';
-            document.getElementById('f-right').value = '';
-            document.getElementById('f-detail').value = '';
-            document.getElementById('f-manual').value = '';
-            document.getElementById('f-runners').value = '';
-            document.getElementById('f-action').value = '';
+            clearImages();
             document.getElementById('f-orig-no').value = '';
             document.getElementById('f-orig-series').value = '';
             document.getElementById('form-title').textContent = '新增產品';
@@ -250,26 +255,12 @@
 
             const data = getData();
             if (!data[series]) data[series] = [];
-            const detailRaw = document.getElementById('f-detail').value.trim();
-            const manualRaw = document.getElementById('f-manual').value.trim();
-            const runnersRaw = document.getElementById('f-runners').value.trim();
-            const actionRaw = document.getElementById('f-action').value.trim();
             const newProd = {
                 no, name,
                 name_jp: document.getElementById('f-name_jp').value.trim(),
                 release: document.getElementById('f-release').value.trim(),
                 price: parseInt(document.getElementById('f-price').value) || 0,
-                images: {
-                    box: document.getElementById('f-box').value.trim(),
-                    front: document.getElementById('f-front').value.trim(),
-                    back: document.getElementById('f-back').value.trim(),
-                    left: document.getElementById('f-left').value.trim(),
-                    right: document.getElementById('f-right').value.trim(),
-                    detail: detailRaw ? detailRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
-                    manual: manualRaw ? manualRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
-                    runners: runnersRaw ? runnersRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
-                    action: actionRaw ? actionRaw.split(',').map(s => s.trim()).filter(Boolean) : []
-                }
+                images: getImagesFromForm()
             };
 
             if (editMode) {
