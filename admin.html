@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理後台 - PLASTIC_JUNKIE</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+        .login-box { max-width: 400px; margin: 100px auto; background: var(--bg-secondary); padding: 40px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+        .login-box input { width: 100%; padding: 12px; margin: 12px 0; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-size: 16px; }
+        .login-box .btn { width: 100%; padding: 12px; font-size: 16px; cursor: pointer; border: none; }
+        .hidden { display: none !important; }
+        .toolbar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .toolbar select, .toolbar input { padding: 10px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-size: 14px; }
+        .toolbar .btn { cursor: pointer; border: none; }
+        .form-section { background: var(--bg-secondary); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .form-section h3 { margin-bottom: 16px; color: var(--accent); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .form-row label { font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 4px; }
+        .form-row input, .form-row select { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font-size: 14px; }
+        .product-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .product-table th { background: var(--card-bg); padding: 10px; text-align: left; border-bottom: 2px solid var(--accent); position: sticky; top: 0; }
+        .product-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+        .product-table tr:hover { background: rgba(233,69,96,0.05); }
+        .product-table .actions { display: flex; gap: 6px; }
+        .btn-sm { padding: 4px 12px; font-size: 12px; border: none; border-radius: 3px; cursor: pointer; }
+        .btn-edit { background: #2e86c1; color: #fff; }
+        .btn-del { background: #c0392b; color: #fff; }
+        .btn-export { background: #27ae60; color: #fff; }
+        .btn-logout { background: #7f8c8d; color: #fff; }
+        .table-wrap { max-height: 500px; overflow-y: auto; border-radius: 4px; }
+        .msg { padding: 10px 16px; border-radius: 4px; margin-bottom: 12px; font-size: 14px; }
+        .msg-ok { background: #1e3a1e; color: #27ae60; border: 1px solid #27ae60; }
+        .msg-err { background: #3a1e1e; color: #e74c3c; border: 1px solid #e74c3c; }
+        .series-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .series-picker button { padding: 8px 16px; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+        .series-picker button.active { border-color: var(--accent); color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div id="login-screen" class="login-box">
+        <h2 style="margin-bottom:8px">PLASTIC_JUNKIE</h2>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px">管理後台登入</p>
+        <input type="password" id="password" placeholder="輸入密碼" onkeydown="if(event.key==='Enter')login()">
+        <button class="btn" onclick="login()">登入</button>
+        <p id="login-msg" style="color:#e74c3c;font-size:13px;margin-top:8px;min-height:20px"></p>
+    </div>
+
+    <div id="admin-screen" class="admin-container hidden">
+        <div class="toolbar">
+            <h2 style="margin-right:auto">管理後台</h2>
+            <button class="btn btn-export btn-sm" onclick="exportData()">下載 data.js</button>
+            <button class="btn btn-logout btn-sm" onclick="logout()">登出</button>
+        </div>
+        <div id="msg-area"></div>
+
+        <div class="series-picker" id="series-picker"></div>
+
+        <div class="form-section">
+            <h3 id="form-title">新增產品</h3>
+            <div class="form-row">
+                <div><label>編號 (SKU)</label><input type="text" id="f-no" placeholder="MG001"></div>
+                <div><label>系列</label><select id="f-series"><option value="">-- 選擇系列 --</option></select></div>
+            </div>
+            <div class="form-row">
+                <div><label>中文名</label><input type="text" id="f-name" placeholder="RX-78-2 高達 Ver.3.0"></div>
+                <div><label>日文名</label><input type="text" id="f-name_jp" placeholder="RX-78-2 ガンダム Ver.3.0"></div>
+            </div>
+            <div class="form-row">
+                <div><label>發售日期</label><input type="text" id="f-release" placeholder="2013-08"></div>
+                <div><label>價格 (¥)</label><input type="number" id="f-price" placeholder="4500"></div>
+            </div>
+            <div class="form-row">
+                <div><label>盒面圖 URL</label><input type="text" id="f-box" placeholder="images/mg001-box.jpg"></div>
+                <div><label>正面圖 URL</label><input type="text" id="f-front" placeholder="images/mg001-front.jpg"></div>
+            </div>
+            <div class="form-row">
+                <div><label>背面圖 URL</label><input type="text" id="f-back" placeholder="images/mg001-back.jpg"></div>
+                <div><label>細節圖 URL（逗號分隔）</label><input type="text" id="f-detail" placeholder="images/mg001-d1.jpg, images/mg001-d2.jpg"></div>
+            </div>
+            <input type="hidden" id="f-orig-no">
+            <input type="hidden" id="f-orig-series">
+            <div style="margin-top:12px;display:flex;gap:8px">
+                <button class="btn" onclick="saveProduct()">儲存</button>
+                <button class="btn btn-logout btn-sm" onclick="cancelEdit()" id="btn-cancel" style="display:none">取消編輯</button>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 id="table-title">產品列表</h3>
+            <div class="table-wrap">
+                <table class="product-table">
+                    <thead><tr><th>編號</th><th>名稱</th><th>發售</th><th>價格</th><th>操作</th></tr></thead>
+                    <tbody id="product-tbody"></tbody>
+                </table>
+            </div>
+            <p id="product-count" style="font-size:13px;color:var(--text-muted);margin-top:8px"></p>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = 'plasticjunkie2024';
+        const ALL_SERIES = ['PG','MG','RG','HG','SD','RE100','FM','MEGASIZE','LEGO','CHINA'];
+        let currentSeries = 'MG';
+        let editMode = false;
+
+        function login() {
+            const pwd = document.getElementById('password').value;
+            if (pwd === ADMIN_PASSWORD) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('admin-screen').classList.remove('hidden');
+                initAdmin();
+            } else {
+                document.getElementById('login-msg').textContent = '密碼錯誤';
+            }
+        }
+
+        function logout() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('admin-screen').classList.add('hidden');
+            document.getElementById('password').value = '';
+        }
+
+        function msg(text, type) {
+            const area = document.getElementById('msg-area');
+            area.innerHTML = `<div class="msg msg-${type}">${text}</div>`;
+            setTimeout(() => area.innerHTML = '', 3000);
+        }
+
+        function initAdmin() {
+            const picker = document.getElementById('series-picker');
+            picker.innerHTML = ALL_SERIES.map(s =>
+                `<button class="${s===currentSeries?'active':''}" onclick="switchSeries('${s}')">${s}</button>`
+            ).join('');
+            const sel = document.getElementById('f-series');
+            sel.innerHTML = ALL_SERIES.map(s => `<option value="${s}" ${s===currentSeries?'selected':''}>${s}</option>`).join('');
+            loadProducts();
+        }
+
+        function switchSeries(s) {
+            currentSeries = s;
+            document.querySelectorAll('#series-picker button').forEach(b => b.classList.remove('active'));
+            document.querySelector(`#series-picker button[onclick="switchSeries('${s}')"]`).classList.add('active');
+            document.getElementById('f-series').value = s;
+            cancelEdit();
+            loadProducts();
+        }
+
+        function getData() {
+            return window.GUNDAM_DATA || {};
+        }
+
+        function saveData(data) {
+            window.GUNDAM_DATA = data;
+        }
+
+        function loadProducts() {
+            const data = getData();
+            const products = data[currentSeries] || [];
+            const tbody = document.getElementById('product-tbody');
+            document.getElementById('product-count').textContent = `共 ${products.length} 件`;
+            document.getElementById('table-title').textContent = `${currentSeries} 系列 - 產品列表`;
+
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px">暫無產品</td></tr>';
+                return;
+            }
+            tbody.innerHTML = products.map((p, i) => `
+                <tr>
+                    <td>${p.no}</td>
+                    <td>${p.name}</td>
+                    <td>${p.release||'-'}</td>
+                    <td>¥${(p.price||0).toLocaleString()}</td>
+                    <td class="actions">
+                        <button class="btn-sm btn-edit" onclick="editProduct('${p.no}')">編輯</button>
+                        <button class="btn-sm btn-del" onclick="deleteProduct('${p.no}')">刪除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function editProduct(no) {
+            const data = getData();
+            const products = data[currentSeries] || [];
+            const p = products.find(x => x.no === no);
+            if (!p) return;
+            document.getElementById('f-no').value = p.no;
+            document.getElementById('f-series').value = currentSeries;
+            document.getElementById('f-name').value = p.name;
+            document.getElementById('f-name_jp').value = p.name_jp || '';
+            document.getElementById('f-release').value = p.release || '';
+            document.getElementById('f-price').value = p.price || '';
+            const imgs = p.images || {};
+            document.getElementById('f-box').value = imgs.box || '';
+            document.getElementById('f-front').value = imgs.front || '';
+            document.getElementById('f-back').value = imgs.back || '';
+            document.getElementById('f-detail').value = (imgs.detail||[]).join(', ');
+            document.getElementById('f-orig-no').value = no;
+            document.getElementById('f-orig-series').value = currentSeries;
+            document.getElementById('form-title').textContent = `編輯產品: ${p.no}`;
+            document.getElementById('btn-cancel').style.display = 'inline-block';
+            editMode = true;
+        }
+
+        function cancelEdit() {
+            document.getElementById('f-no').value = '';
+            document.getElementById('f-name').value = '';
+            document.getElementById('f-name_jp').value = '';
+            document.getElementById('f-release').value = '';
+            document.getElementById('f-price').value = '';
+            document.getElementById('f-box').value = '';
+            document.getElementById('f-front').value = '';
+            document.getElementById('f-back').value = '';
+            document.getElementById('f-detail').value = '';
+            document.getElementById('f-orig-no').value = '';
+            document.getElementById('f-orig-series').value = '';
+            document.getElementById('form-title').textContent = '新增產品';
+            document.getElementById('btn-cancel').style.display = 'none';
+            editMode = false;
+        }
+
+        function saveProduct() {
+            const no = document.getElementById('f-no').value.trim();
+            const series = document.getElementById('f-series').value;
+            const name = document.getElementById('f-name').value.trim();
+            if (!no || !series || !name) { msg('請填寫編號、系列、名稱', 'err'); return; }
+
+            const data = getData();
+            if (!data[series]) data[series] = [];
+            const detailRaw = document.getElementById('f-detail').value.trim();
+            const newProd = {
+                no, name,
+                name_jp: document.getElementById('f-name_jp').value.trim(),
+                release: document.getElementById('f-release').value.trim(),
+                price: parseInt(document.getElementById('f-price').value) || 0,
+                images: {
+                    box: document.getElementById('f-box').value.trim(),
+                    front: document.getElementById('f-front').value.trim(),
+                    back: document.getElementById('f-back').value.trim(),
+                    detail: detailRaw ? detailRaw.split(',').map(s => s.trim()).filter(Boolean) : []
+                }
+            };
+
+            if (editMode) {
+                const origNo = document.getElementById('f-orig-no').value;
+                const origSeries = document.getElementById('f-orig-series').value;
+                const idx = (data[origSeries]||[]).findIndex(x => x.no === origNo);
+                if (idx >= 0) {
+                    if (origSeries !== series) {
+                        data[origSeries].splice(idx, 1);
+                        data[series].push(newProd);
+                    } else {
+                        data[origSeries][idx] = newProd;
+                    }
+                }
+            } else {
+                if (data[series].some(x => x.no === no)) { msg('編號已存在', 'err'); return; }
+                data[series].push(newProd);
+            }
+
+            saveData(data);
+            cancelEdit();
+            switchSeries(series);
+            msg(editMode ? '產品已更新' : '產品已新增', 'ok');
+            editMode = false;
+            document.getElementById('f-orig-no').value = '';
+            document.getElementById('f-orig-series').value = '';
+        }
+
+        function deleteProduct(no) {
+            if (!confirm(`確定刪除 ${no}？`)) return;
+            const data = getData();
+            data[currentSeries] = (data[currentSeries]||[]).filter(x => x.no !== no);
+            saveData(data);
+            loadProducts();
+            msg(`${no} 已刪除`, 'ok');
+        }
+
+        function exportData() {
+            const data = getData();
+            const content = `// ========== Plastic Junkie Product Database ==========
+// GUNPLA + LEGO + 中國產模型
+
+const GUNDAM_DATA = ${JSON.stringify(data, null, 4)};
+`;
+            const blob = new Blob([content], {type: 'application/javascript'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.js';
+            a.click();
+            URL.revokeObjectURL(url);
+            msg('data.js 已下載，請上傳到 GitHub repo 根目錄', 'ok');
+        }
+    </script>
+    <script src="data.js"></script>
+</body>
+</html>
