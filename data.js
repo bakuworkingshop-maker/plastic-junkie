@@ -31,6 +31,47 @@ const GUNDAM_DATA = {
                 "back": "",
                 "detail": []
             }
+        },
+        {
+            "no": "MG003",
+            "name": "RX-93 ν高達",
+            "name_jp": "RX-93 νガンダム（ニューガンダム）",
+            "release": "2000-12",
+            "price": 5000,
+            "images": {
+                "box": "images/mg-rx-93-nu-gundam/cover.jpeg",
+                "front": "images/mg-rx-93-nu-gundam/finished-front.jpeg",
+                "back": "images/mg-rx-93-nu-gundam/finished-back.jpeg",
+                "detail": [
+                    "images/mg-rx-93-nu-gundam/finished-angle.jpeg"
+                ]
+            },
+            "gallery": [
+                {
+                    "title": "完成展示",
+                    "images": [
+                        "images/mg-rx-93-nu-gundam/finished-front.jpeg",
+                        "images/mg-rx-93-nu-gundam/finished-back.jpeg",
+                        "images/mg-rx-93-nu-gundam/finished-angle.jpeg"
+                    ]
+                },
+                {
+                    "title": "內構與可動",
+                    "images": [
+                        "images/mg-rx-93-nu-gundam/frame-front.jpeg",
+                        "images/mg-rx-93-nu-gundam/frame-back.jpeg",
+                        "images/mg-rx-93-nu-gundam/frame-side.jpeg",
+                        "images/mg-rx-93-nu-gundam/frame-pose.jpeg"
+                    ]
+                },
+                {
+                    "title": "細節特寫",
+                    "images": [
+                        "images/mg-rx-93-nu-gundam/leg-cable-detail.jpeg"
+                    ]
+                }
+            ],
+            "notes": "完成品展示配合內構、可動及腿部管線細節紀錄。"
         }
     ],
 

@@ -50,6 +50,7 @@
                 { label: '背面圖', src: product.images.back },
                 ...detailImages.map((src, i) => ({ label: `細節圖 ${i+1}`, src }))
             ].filter(img => img.src);
+            const galleries = product.gallery || (allImages.length ? [{ title: '圖片集', images: allImages.map(img => img.src) }] : []);
 
             container.innerHTML = `
                 <a href="series-${seriesPage}.html" class="back-link">← 返回 ${series} 系列</a>
@@ -63,15 +64,20 @@
                     <div class="info-item"><span class="info-label">定價</span><span class="info-value">¥${(product.price || 0).toLocaleString()}</span></div>
                 </div>
 
-                ${allImages.length > 0 ? `
-                <h2 style="font-size:16px;margin-bottom:12px">圖片集</h2>
-                <div class="image-gallery">
-                    ${allImages.map(img => `
-                        <div class="gallery-item">
-                            <img src="${img.src}" alt="${img.label}" loading="lazy">
+                ${galleries.length > 0 ? `
+                ${galleries.map(group => `
+                    <section class="gallery-section">
+                        <h2>${group.title}</h2>
+                        <div class="image-gallery">
+                            ${group.images.map((src, index) => `
+                                <div class="gallery-item">
+                                    <img src="${src}" alt="${product.name} - ${group.title} ${index + 1}" loading="lazy">
+                                </div>
+                            `).join('')}
                         </div>
-                    `).join('')}
-                </div>
+                    </section>
+                `).join('')}
+                ${product.notes ? `<section class="product-notes"><h2>製作備註</h2><p>${product.notes}</p></section>` : ''}
                 ` : `
                 <div style="text-align:center;padding:60px;color:var(--text-muted)">暫無圖片，待日後加入。</div>
                 `}

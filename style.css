@@ -319,6 +319,27 @@ a:hover { color: var(--accent-hover); }
     gap: 12px;
     margin-bottom: 32px;
 }
+.gallery-section {
+    margin-bottom: 32px;
+}
+.gallery-section h2,
+.product-notes h2 {
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+.gallery-section .image-gallery {
+    margin-bottom: 0;
+}
+.product-notes {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+}
+.product-notes p {
+    color: var(--text-muted);
+    font-size: 14px;
+}
 .gallery-item {
     background: var(--white-bg);
     border-radius: 4px;
